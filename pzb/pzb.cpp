@@ -32,9 +32,7 @@ static void printline(int percent){
 }
 
 static void fragmentzip_callback(unsigned int progress){
-    cout << "\x1b[A\033[J" ; //clear 2 lines
-    printline((int)progress);
-    cout <<endl;
+    cout << "\r\033[K" << setw(3) << progress << "%" << flush;
 }
 
 void pzb::log(string msg){
