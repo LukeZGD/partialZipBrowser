@@ -29,14 +29,14 @@ jobs:
           make
 
       - name: Zip partialZipBrowser
-        run: zip -r partialZipBrowser_linux-${{ matrix.arch.name }}.zip partialZipBrowser/pzb
+        run: zip -r pzb_linux-${{ matrix.arch.name }}.zip pzb/pzb
 
       - name: Update latest release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload latest \
-            partialZipBrowser_linux-${{ matrix.arch.name }}.zip \
+            pzb_linux-${{ matrix.arch.name }}.zip \
             --clobber -R ${{ github.repository }}
 
           gh release edit latest \
