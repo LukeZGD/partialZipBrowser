@@ -153,10 +153,10 @@ int cmd_get(pzb &obj, string file, string dst, bool mkdirs){
     
     bool dwn = obj.downloadFile(file,dst);
     if (!dwn){
-        cout << "download failed"<<endl;
+        cout << "\ndownload failed" << endl;
         return -3;
     }else{
-        cout << "download succeeded"<<endl;
+        cout << "\ndownload succeeded" << endl;
         return 0;
     }
 }
