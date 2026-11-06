@@ -1,5 +1,35 @@
 #!/usr/bin/env bash
 set -x
+PREFIX="/usr/local"
+
+if [[ $(uname) == "Darwin" ]]; then
+    export MACOSX_DEPLOYMENT_TARGET=10.11
+    mkdir -p tmp
+    cd tmp
+
+    git clone --filter=blob:none https://github.com/lukezgd/libgeneral
+    git clone --filter=blob:none https://github.com/lukezgd/libfragmentzip
+
+    cd libgeneral
+    ./autogen.sh --disable-shared --enable-universal
+    make
+    sudo make install
+    cd ..
+
+    cd libfragmentzip
+    export SDKDIR="$(xcrun --sdk macosx --show-sdk-path)"
+    ./autogen.sh --disable-shared --enable-universal curl_CFLAGS="-I$SDKDIR/usr/include" curl_LIBS="-lcurl" libgeneral_CFLAGS="-I$PREFIX/include -stdlib=libc++" libgeneral_LIBS="-L$PREFIX/lib -lgeneral"
+    make
+    sudo make install
+    cd ..
+
+    cd ..
+    rm -rf tmp
+    ./autogen.sh --enable-universal libfragmentzip_CFLAGS="-I$PREFIX/include" libfragmentzip_LIBS="-L$PREFIX/lib -lfragmentzip"
+    make LIBS="-lcurl -lz"
+
+    exit
+fi
 
 sudo apt update
 sudo apt install -y build-essential autoconf automake libtool pkg-config

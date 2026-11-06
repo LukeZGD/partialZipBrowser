@@ -2,23 +2,34 @@ AC_PREREQ([2.69])
 AC_INIT([partialZipBrowser], m4_esyscmd([git rev-list --count HEAD | tr -d '\n']), [tihmstar@gmail.com])
 AM_INIT_AUTOMAKE(partialZipBrowser, m4_esyscmd([git rev-list --count HEAD | tr -d '\n']))
 
-
 AC_CONFIG_SRCDIR([pzb/pzb.hpp])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
 CXXFLAGS+=" -std=c++11"
+
 AC_DEFINE([PZB_VERSION_COMMIT_COUNT], "m4_esyscmd([git rev-list --count HEAD | tr -d '\n'])", [Git commit count])
 AC_DEFINE([PZB_VERSION_COMMIT_SHA], "m4_esyscmd([git rev-parse HEAD | tr -d '\n'])", [Git commit sha])
 
 AC_CANONICAL_HOST
+
+# Check for universal build
+AC_ARG_ENABLE([universal],
+    AS_HELP_STRING([--enable-universal], [Build universal macOS binary (x86_64 and arm64)]),
+    [enable_universal=$enableval],
+    [enable_universal=no])
+
 # Check for operating system
 AC_MSG_CHECKING([whether we need platform-specific build settings])
 case $host_os in
   darwin* )
-	CXXFLAGS+=" -stdlib=libc++"
-        ;;
+    CXXFLAGS+=" -stdlib=libc++"
+    AS_IF([test "x$enable_universal" = "xyes"], [
+        CXXFLAGS+=" -arch x86_64 -arch arm64"
+        LDFLAGS+=" -arch x86_64 -arch arm64"
+    ])
+    ;;
 esac
 
 AC_PROG_INSTALL
