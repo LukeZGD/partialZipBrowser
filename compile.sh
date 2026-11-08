@@ -18,7 +18,7 @@ if [[ $(uname) == "Darwin" ]]; then
 
     cd libfragmentzip
     export SDKDIR="$(xcrun --sdk macosx --show-sdk-path)"
-    ./autogen.sh --disable-shared --enable-universal curl_CFLAGS="-I$SDKDIR/usr/include" curl_LIBS="-lcurl" libgeneral_CFLAGS="-I$PREFIX/include -stdlib=libc++" libgeneral_LIBS="-L$PREFIX/lib -lgeneral"
+    ./autogen.sh --disable-shared --enable-universal curl_CFLAGS="-I$SDKDIR/usr/include" curl_LIBS="-lcurl" libgeneral_CFLAGS="-I$PREFIX/include -stdlib=libc++" libgeneral_LIBS="-L$PREFIX/lib -lgeneral" zlib_CFLAGS="-I$SDKDIR/usr/include" zlib_LIBS="-lz"
     make
     sudo make install
     cd ..
